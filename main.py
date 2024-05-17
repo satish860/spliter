@@ -1,22 +1,22 @@
 from typing import Optional
 from fastapi import FastAPI, File, UploadFile
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfWriter, PdfReader
 from io import BytesIO
 import base64
 
 app = FastAPI()
 
 def split_pdf_into_50_pages(pdf_file):
-    reader = PdfFileReader(pdf_file)
-    total_pages = reader.getNumPages()
+    reader = PdfReader(pdf_file)
+    total_pages = len(reader.pages)
     chunks = []
 
     for start_page in range(0, total_pages, 50):
-        writer = PdfFileWriter()
+        writer = PdfWriter()
         end_page = min(start_page + 50, total_pages)
 
         for page in range(start_page, end_page):
-            writer.addPage(reader.getPage(page))
+            writer.add_page(reader.pages[page])
 
         buffer = BytesIO()
         writer.write(buffer)
