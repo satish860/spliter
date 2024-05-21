@@ -6,14 +6,14 @@ import base64
 
 app = FastAPI()
 
-def split_pdf_into_50_pages(pdf_file):
+def split_pdf_into_10_pages(pdf_file):
     reader = PdfReader(pdf_file)
     total_pages = len(reader.pages)
     chunks = []
 
-    for start_page in range(0, total_pages, 50):
+    for start_page in range(0, total_pages, 10):
         writer = PdfWriter()
-        end_page = min(start_page + 50, total_pages)
+        end_page = min(start_page + 10, total_pages)
 
         for page in range(start_page, end_page):
             writer.add_page(reader.pages[page])
@@ -39,5 +39,5 @@ def read_item(item_id: int, q: Optional[str] = None):
           description="Upload a PDF file to split it into 50-page chunks",
           response_description="Base64-encoded byte arrays of the PDF chunks")
 async def split_pdf(pdf_file: UploadFile = File(...)):
-    pdf_chunks = split_pdf_into_50_pages(pdf_file.file)
+    pdf_chunks = split_pdf_into_10_pages(pdf_file.file)
     return {"chunks": pdf_chunks}
